@@ -54,6 +54,13 @@ python -m mianshi web --port 8771
 
 `data/resume-sample.json` and `data/job-sample.json` hold a data/product-oriented graduate resume and two job posts to try.
 
+Run in Docker (the container uses the default port 8771):
+
+```bash
+docker build -t mianshi .
+docker run -p 8771:8771 mianshi
+```
+
 ## Command reference
 
 | Command | What it does |
@@ -71,6 +78,46 @@ python -m mianshi web --port 8771
 | `stats` / `web` | Stats / web |
 
 Global flags: `--mock`, `--json`, `--model`, `--base-url`, `--api-key`, `--db`.
+
+## 🤔 Why not just ask a general LLM
+
+A general model reading a resume and a JD says "a strong match". Mianshi adds the three things it cannot:
+
+1. **The match score is computed locally** — skill coverage and JD keywords are compared item by item, so the score is calculated rather than felt; the same resume and JD give the same score, which makes two versions comparable.
+2. **Questions must come from the JD** — generated interview questions must contain JD wording; invented questions are dropped. Reviewing answers checks eight consecutive characters against the resume, so it cannot slip in experience you do not have.
+3. **Resumes and application records stay local** — phone number and work history sit in local SQLite and are not uploaded; a model call sends the current resume and matching JD.
+4. **Structured output** — score, strengths, risks, question list and review come back as fields you can prepare against; a chat reply is encouragement you cannot practise with.
+
+## 🎯 Use cases
+
+- **Scoring before applying**: run one resume against three JDs and see which role genuinely covers your skills, instead of spending time on obvious mismatches.
+- **Mock interview the night before**: generate ten questions from the JD, answer them yourself, then have the model point out vague or off-topic parts.
+- **Reviewing a past interview**: write down what you actually said and see where it was thin or missed the point.
+
+## 🗺 Roadmap
+
+- **Follow-up rounds**: one more question after each answer, like an interviewer asking "how much data did that mini-program handle".
+- **STAR structure check**: whether the answer covers situation, task, action and result.
+- **Role question banks**: common questions for product, operations and data, mixed with JD-generated ones.
+- **Resume version comparison**: two phrasings of the same experience scored separately.
+- **Shared resume with Lvzhou**: maintain it once, read it from both matching and interview advice.
+
+## ❓ FAQ
+
+**Where do I get an API key?**
+The project ships without one. It talks to DeepSeek (`https://api.deepseek.com`) by default — set `LLM_API_KEY`; any OpenAI-compatible endpoint works.
+
+**Where is data stored, and is it uploaded?**
+Resumes, JDs and mock records are in local SQLite; a model call sends the current resume and JD, not your application history.
+
+**Does it work without a key?**
+It computes the match score locally and shows keyword gaps; question generation and review need a model.
+
+**How do I switch models?**
+Change `LLM_BASE_URL`, `LLM_MODEL` and `LLM_API_KEY`, or override with `--model`.
+
+**Is the match score accurate?**
+It is literal coverage, not a judgement of experience quality. It will not tell you whether you are good enough, but it reliably filters obvious mismatches and compares two resume versions.
 
 ## How it works
 
