@@ -12,7 +12,7 @@ from .db import Database
 PAGE = """<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>面试 · 求职助手</title>
+<title>面试 · 这一轮多了什么证据</title>
 <style>
 :root{--bg:#0e1116;--card:#171c24;--line:#26303c;--text:#e6edf3;--dim:#8b98a5;--accent:#f2b544;--ok:#57c98b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 "Segoe UI","Microsoft YaHei",sans-serif}
@@ -32,8 +32,64 @@ button.go:disabled{opacity:.55;cursor:wait}
 pre{white-space:pre-wrap;word-break:break-word;background:#0b0f14;border:1px solid var(--line);border-radius:8px;padding:14px;min-height:80px;font:13px/1.65 "Cascadia Mono",monospace}
 .badge{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--dim);margin-left:8px}
 .badge.off{color:var(--accent);border-color:var(--accent)}
+
+h1{font-size:clamp(31px,5vw,39px);line-height:1.26}
+.prod{display:block;font-size:11px;line-height:1.4;letter-spacing:.18em;font-weight:650;margin-bottom:8px;opacity:.72}
+.lede,.sub{max-width:62ch;line-height:1.75}
+.route{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:0 0 20px;border:1px solid var(--line);background:var(--line)}
+.route span{padding:11px 13px;background:var(--card);font-size:12px;line-height:1.5}
+.route b{display:block;font-size:10px;letter-spacing:.1em;margin-bottom:3px;opacity:.66}
+button{min-height:46px}
+input,select{min-height:44px}
+@media(max-width:680px){
+  .wrap{padding:20px 16px 56px}
+  .route{grid-template-columns:1fr}
+  h1{font-size:30px!important}
+  .row>div{min-width:100%!important}
+  button{width:100%}
+}
+
+body{background:#f4efe8;color:#2b2927;font-family:"PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:900px}
+header{background:#262a2f;color:#fbf8f3;padding:24px 24px 22px;margin-bottom:20px;border-bottom:4px solid #b45d2a}
+header h1{font-size:37px;line-height:1.26;letter-spacing:-.02em}
+header p{color:#d1c9bf;font-size:14px}
+.card{background:#fffaf4;border:1px solid #ded2c2;border-radius:2px;box-shadow:0 1px 0 #e9dfd3}
+button{background:#b45d2a;border-radius:2px;letter-spacing:.05em}
+button:hover{background:#9c4d20}
+textarea,input,select{background:#fffdf9;border-color:#d9ccbb;border-radius:2px}
+textarea:focus,input:focus,select:focus{border-color:#b45d2a;box-shadow:0 0 0 2px #eed9cd}
+.cost .cell b,.cell b{font-family:"Cascadia Mono",Consolas,monospace;font-variant-numeric:tabular-nums}
+.item{border-left:3px solid #b45d2a}
+h3{color:#8d4a25;letter-spacing:.08em}
+
+
+/* palette-normalized */
+:root{--bg:#f4efe8;--card:#fffaf4;--ink:#2b2927;--text:#2b2927;--dim:#746b60;--line:#ded2c2;--accent:#b45d2a}
+pre{background:#fffdf8;color:#2b2927;border-color:#ded2c2;border-radius:2px}
+
+/* polish-batch1 */
+button.ghost,button.secondary{background:transparent!important;color:#b45d2a!important;border:1px solid #ded2c2!important}
+
+/* mobile-32 */
+
+@media(max-width:760px){
+  main{grid-template-columns:1fr!important}
+  aside{border-right:0!important;border-bottom:1px solid #ded2c2;width:auto!important}
+  section{padding:16px!important}
+  .row{flex-wrap:wrap!important}
+  .row>div{min-width:100%!important}
+  h1{font-size:30px!important}
+  .route{grid-template-columns:1fr!important}
+  button{min-height:48px}
+  pre{overflow-x:auto}
+}
+
+/* mobile-height */
+@media(max-width:760px){main{min-height:auto!important}aside{min-height:0!important}}
 </style></head><body><div class="wrap">
-<h1>面试 · 求职助手<span id="status" class="badge">…</span></h1>
+<h1><span class="prod">面试</span>同一个追问，这次答得更好吗 <span id="status" class="badge">…</span></h1>
+  <p class="sub">给已有目标岗位的求职者：按 JD 和真实经历出题，用同一套维度复练，比较遗漏证据、结构和时长，收成口袋卡。</p>
 <div class="sub">简历与 JD 匹配、出题、回答点评、措辞建议。只读你粘进来的文本。</div>
 <div class="tabs">
   <button class="tab on" data-tab="match">匹配与出题</button>
@@ -41,7 +97,9 @@ pre{white-space:pre-wrap;word-break:break-word;background:#0b0f14;border:1px sol
 </div>
 
 <div class="panel on" id="match">
-  <div class="card">
+  
+  <div class="route" aria-label="任务步骤"><span><b>01</b>贴 JD 和经历</span><span><b>02</b>计时答一轮</span><span><b>03</b>同维度复练</span></div>
+<div class="card">
     <div class="row"><div><label>岗位标题</label><input id="title" value="AI 产品经理"></div>
     <div><label>公司</label><input id="company" placeholder="可留空"></div></div>
     <label>JD(不少于 60 字)</label><textarea id="jd" placeholder="把岗位描述粘进来……"></textarea>
